@@ -9,10 +9,8 @@ var channels;
 ipc.on('check-unread', () => {
   unreadChats = document.getElementsByClassName('unread');
   if (unreadChats.length == 0) {
-    console.log('clearing');
     ipc.send('clear-notification');
   } else {
-    console.log('new');
     ipc.send('new-notification');
   }
 });
