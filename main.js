@@ -38,7 +38,7 @@ function createMainWindow() {
   win.loadURL(url);
 
   win.webContents.on('did-finish-load', () => {
-    win.webContents.send('check-unread');
+    win.webContents.send('loaded');
   });
 
   win.on('focus', e => {

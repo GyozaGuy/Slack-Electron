@@ -3,19 +3,27 @@
 var ipc = require('electron').ipcRenderer;
 var NativeNotification = Notification;
 var unreadChats;
-var starred;
-var channels;
+var channelBox;
 
-ipc.on('check-unread', () => {
+function checkUnread() {
   unreadChats = document.getElementsByClassName('unread');
   if (unreadChats.length == 0) {
     ipc.send('clear-notification');
   } else {
     ipc.send('new-notification');
   }
+}
+
+ipc.on('check-unread', () => {
+  checkUnread();
 });
 
-Notification = function (title, options) {
+ipc.on('loaded', () => {
+  document.addEventListener('mousemove', checkUnread);
+  checkUnread();
+});
+
+Notification = function(title, options) {
   var notification = new NativeNotification(title, options);
 
   ipc.send('new-notification');
