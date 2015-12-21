@@ -1,12 +1,32 @@
 'use strict';
 
-const ipc = require('electron').ipcRenderer;
-const NativeNotification = Notification;
+var ipc = require('electron').ipcRenderer;
+var NativeNotification = Notification;
+var unreadChats;
+var channelBox;
+
+function checkUnread() {
+  unreadChats = document.getElementsByClassName('unread');
+  if (unreadChats.length == 0) {
+    ipc.send('clear-notification');
+  } else {
+    ipc.send('new-notification');
+  }
+}
+
+ipc.on('check-unread', () => {
+  checkUnread();
+});
+
+ipc.on('loaded', () => {
+  document.addEventListener('mousemove', checkUnread);
+  checkUnread();
+});
 
 Notification = function(title, options) {
-  const notification = new NativeNotification(title, options);
+  var notification = new NativeNotification(title, options);
 
-  ipc.send('change-icon');
+  ipc.send('new-notification');
 
   notification.addEventListener('click', () => {
     ipc.send('notification-click');

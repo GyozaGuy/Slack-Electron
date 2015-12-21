@@ -37,11 +37,12 @@ function createMainWindow() {
 
   win.loadURL(url);
 
+  win.webContents.on('did-finish-load', () => {
+    win.webContents.send('loaded');
+  });
+
   win.on('focus', e => {
-    if (unreadNotification) {
-      unreadNotification = false;
-      sysTray.setImage(appicon);
-    }
+    win.webContents.send('check-unread');
   });
 
   win.on('close', e => {
@@ -123,7 +124,14 @@ app.on('before-quit', () => {
   isQuitting = true;
 });
 
-ipc.on('change-icon', () => {
+ipc.on('clear-notification', () => {
+  if (unreadNotification) {
+    unreadNotification = false;
+    sysTray.setImage(appicon);
+  }
+});
+
+ipc.on('new-notification', () => {
   if (!unreadNotification) {
     unreadNotification = true;
     sysTray.setImage(appicon_event);
