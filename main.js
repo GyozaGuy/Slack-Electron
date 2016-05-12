@@ -16,7 +16,6 @@ var browserwindow = electron.BrowserWindow;
 var appicon = path.join(__dirname, 'images', 'app.png');
 var appicon_event = path.join(__dirname, 'images', 'app_event.png');
 var ipc = electron.ipcMain;
-
 var mainWindow;
 var sysTray;
 var isQuitting = false;
@@ -68,8 +67,6 @@ function center(win) {
   var y = Math.round(size['height'] / 2 - height / 2);
   win.setPosition(x, y);
 }
-
-electron.crashReporter.start();
 
 app.on('window-all-closed', () => {
   if (process.platform != 'darwin') {
